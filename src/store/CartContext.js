@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState } from "react";
 import { storeCart } from "../helper/StorageHelper";
 storeCart;
 const CartContext = createContext(null);
@@ -7,13 +7,7 @@ const CartContext = createContext(null);
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
-  useEffect(() => {
-    if (cart.length != 0) {
-      cart.forEach((element) => {
-        setTotal(total + element.price);
-      });
-    }
-  }, [cart]);
+
   const AddCart = (item) => {
     var cartItem = cart.find((q) => q.id == item.id);
 
@@ -22,11 +16,13 @@ export const CartProvider = ({ children }) => {
 
       setCart([...cart, item]);
       storeCart([...cart, item]);
+      setTotal(total + item.price);
     } else {
       cartItem.quantity = cartItem.quantity + 1;
 
       setCart([...cart]);
       storeCart([...cart]);
+      setTotal(total + item.price);
     }
   };
 
